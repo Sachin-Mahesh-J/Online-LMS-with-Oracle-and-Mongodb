@@ -6,11 +6,12 @@ import {
 
 export const createReview = async (req, res) => {
   try {
-    const { student_id, course_id, rating, review_text } = req.body;
+    const { course_id, rating, review_text } = req.body;
+    const student_id = req.user.student_id;
 
     if (!student_id || !course_id || rating === undefined) {
       return res.status(400).json({
-        message: "student_id, course_id, and rating are required",
+        message: "course_id and rating are required",
       });
     }
 
@@ -121,6 +122,15 @@ export const getReviewsByStudent = async (req, res) => {
     if (!studentExists) {
       return res.status(400).json({
         message: "Invalid student_id: student does not exist in Oracle",
+      });
+    }
+
+    if (
+      req.user.role === "STUDENT" &&
+      req.user.student_id !== numericStudentId
+    ) {
+      return res.status(403).json({
+        message: "You can only view your own reviews",
       });
     }
 

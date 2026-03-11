@@ -7,12 +7,12 @@ import {
 
 export const createForumPost = async (req, res) => {
   try {
-    const { student_id, course_id, module_id, title, content, tags } = req.body;
+    const { course_id, module_id, title, content, tags } = req.body;
+    const student_id = req.user.student_id;
 
     if (!student_id || !course_id || !module_id || !title || !content) {
       return res.status(400).json({
-        message:
-          "student_id, course_id, module_id, title, and content are required",
+        message: "course_id, module_id, title, and content are required",
       });
     }
 
@@ -98,11 +98,12 @@ export const getForumPostsByCourse = async (req, res) => {
 export const addReplyToPost = async (req, res) => {
   try {
     const { postId } = req.params;
-    const { student_id, content } = req.body;
+    const { content } = req.body;
+    const student_id = req.user.student_id;
 
     if (!student_id || !content) {
       return res.status(400).json({
-        message: "student_id and content are required",
+        message: "content is required",
       });
     }
 

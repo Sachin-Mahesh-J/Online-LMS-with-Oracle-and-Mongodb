@@ -11,16 +11,26 @@ import oracleStudentRoutes from "./routes/oracleStudentRoutes.js";
 import oracleEnrollmentRoutes from "./routes/oracleEnrollmentRoutes.js";
 import oraclePaymentRoutes from "./routes/oraclePaymentRoutes.js";
 import oracleCertificationRoutes from "./routes/oracleCertificationRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = path.join(__dirname, "..", "uploads");
+
 app.use(cors());
 app.use(express.json());
+
+app.use("/uploads", express.static(uploadsDir));
 
 app.get("/", (req, res) => {
   res.json({ message: "Backend is running" });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/forum-posts", forumRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/announcements", announcementRoutes);

@@ -8,13 +8,18 @@ import {
 export const createAnnouncement = async (req, res) => {
   try {
     const {
-      instructor_id,
+      instructor_id: bodyInstructorId,
       course_id,
       module_id,
       title,
       message,
       target_group,
     } = req.body;
+
+    const instructor_id =
+      req.user.role === "ADMIN"
+        ? Number(bodyInstructorId)
+        : Number(req.user.instructor_id);
 
     if (!instructor_id || !course_id || !title || !message) {
       return res.status(400).json({

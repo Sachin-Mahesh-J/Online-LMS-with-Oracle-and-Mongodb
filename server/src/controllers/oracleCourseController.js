@@ -187,3 +187,54 @@ export const createCourse = async (req, res) => {
     if (connection) await connection.close();
   }
 };
+
+export const getStudentsByCourse = async (req, res) => {
+  let connection;
+  let result;
+  let resultSet;
+
+  try {
+    const { id } = req.params;
+    connection = await getOracleConnection();
+
+    result = await connection.execute(
+      `
+      BEGIN
+        list_students_by_course(:course_id, :cursor);
+      END;
+      `,
+      {
+        course_id: Number(id),
+        cursor: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      },
+      {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+      },
+    );
+
+    resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows(1000);
+
+    await resultSet.close();
+
+    res.status(200).json({
+      course_id: Number(id),
+      students: rows,
+    });
+  } catch (error) {
+    console.error("Error fetching students by course from cursor:", error);
+    res.status(500).json({
+      message: "Failed to fetch students for course",
+      error: error.message,
+    });
+  } finally {
+    try {
+      if (resultSet) {
+        await resultSet.close();
+      }
+    } catch {}
+
+    if (connection) await connection.close();
+  }
+};

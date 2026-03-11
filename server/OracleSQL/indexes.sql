@@ -47,3 +47,21 @@ create index idx_certifications_enrollment on
    certifications (
       enrollment_id
    );
+
+
+create index idx_users_email on
+   users (
+      email
+   );
+create index idx_users_role on
+   users (
+      role
+   );
+create index idx_users_student_id on
+   users (
+      student_id
+   );
+create index idx_users_instructor_id on
+   users (
+      instructor_id
+   );

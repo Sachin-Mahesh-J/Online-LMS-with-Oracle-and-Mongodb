@@ -38,6 +38,16 @@ const assignmentSubmissionSchema = new mongoose.Schema(
       required: true,
       min: 1,
     },
+    stored_file_name: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    file_url: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     submitted_at: {
       type: Date,
       default: Date.now,

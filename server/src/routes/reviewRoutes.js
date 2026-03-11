@@ -5,12 +5,17 @@ import {
   getReviewsByCourse,
   getReviewsByStudent,
 } from "../controllers/reviewController.js";
+import {
+  Auth,
+  requireStudent,
+  requireAnyUser,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", createReview);
-router.get("/", getAllReviews);
-router.get("/course/:courseId", getReviewsByCourse);
-router.get("/student/:studentId", getReviewsByStudent);
+router.post("/", Auth, requireStudent, createReview);
+router.get("/", Auth, requireAnyUser, getAllReviews);
+router.get("/course/:courseId", Auth, requireAnyUser, getReviewsByCourse);
+router.get("/student/:studentId", Auth, requireAnyUser, getReviewsByStudent);
 
 export default router;

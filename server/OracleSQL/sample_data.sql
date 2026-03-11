@@ -166,4 +166,90 @@ insert into payments (
            'BANK_TRANSFER',
            'PENDING' );
 
+insert into users (
+   email,
+   password_hash,
+   role,
+   student_id,
+   instructor_id,
+   is_active
+) values ( 'admin@example.com',
+           '$2b$10$ndbNVyr8Kodu1GkYFZ2M3uBP9vNh49rXTXU1NPkd9bKsALezyE4My',
+           'ADMIN',
+           null,
+           null,
+           'Y' );
+
+insert into users (
+   email,
+   password_hash,
+   role,
+   student_id,
+   instructor_id,
+   is_active
+) values ( 'john@example.com',
+           '$2b$10$z5hRkH/jwnPVekBVs4O91.pTW/tp3cmTSwapks6p.z.DroYRzJhwW',
+           'STUDENT',
+           (
+              select student_id
+                from students
+               where email = 'john@example.com'
+           ),
+           null,
+           'Y' );
+
+insert into users (
+   email,
+   password_hash,
+   role,
+   student_id,
+   instructor_id,
+   is_active
+) values ( 'nimal@example.com',
+           '$2b$10$z5hRkH/jwnPVekBVs4O91.pTW/tp3cmTSwapks6p.z.DroYRzJhwW',
+           'STUDENT',
+           (
+              select student_id
+                from students
+               where email = 'nimal@example.com'
+           ),
+           null,
+           'Y' );
+
+insert into users (
+   email,
+   password_hash,
+   role,
+   student_id,
+   instructor_id,
+   is_active
+) values ( 'kasun@example.com',
+           '$2b$10$BT3sF7FjHw89m2rKq4cfH.4sCXp.tyzLlchYJs9CR2GhB7oNTFV1O',
+           'INSTRUCTOR',
+           null,
+           (
+              select instructor_id
+                from instructors
+               where email = 'kasun@example.com'
+           ),
+           'Y' );
+
+insert into users (
+   email,
+   password_hash,
+   role,
+   student_id,
+   instructor_id,
+   is_active
+) values ( 'ayesha@example.com',
+           '$2b$10$BT3sF7FjHw89m2rKq4cfH.4sCXp.tyzLlchYJs9CR2GhB7oNTFV1O',
+           'INSTRUCTOR',
+           null,
+           (
+              select instructor_id
+                from instructors
+               where email = 'ayesha@example.com'
+           ),
+           'Y' );
+
 commit;

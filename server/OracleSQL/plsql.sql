@@ -256,48 +256,20 @@ SHOW ERRORS;
 --    list all students in a course
 -- =========================================
 create or replace procedure list_students_by_course (
-   p_course_id in courses.course_id%type
+   p_course_id in courses.course_id%type,
+   p_cursor    out sys_refcursor
 ) as
-   cursor c_students is
-   select s.student_id,
-          s.first_name,
-          s.last_name,
-          e.completion_status,
-          e.progress_percent
-     from students s
-     join enrollments e
-   on s.student_id = e.student_id
-    where e.course_id = p_course_id
-    order by s.student_id;
-
-   v_student_id        students.student_id%type;
-   v_first_name        students.first_name%type;
-   v_last_name         students.last_name%type;
-   v_completion_status enrollments.completion_status%type;
-   v_progress_percent  enrollments.progress_percent%type;
 begin
-   open c_students;
-   loop
-      fetch c_students into
-         v_student_id,
-         v_first_name,
-         v_last_name,
-         v_completion_status,
-         v_progress_percent;
-      exit when c_students%notfound;
-      dbms_output.put_line('Student ID: '
-                           || v_student_id
-                           || ', Name: '
-                           || v_first_name
-                           || ' '
-                           || v_last_name
-                           || ', Status: '
-                           || v_completion_status
-                           || ', Progress: '
-                           || v_progress_percent || '%');
-   end loop;
-
-   close c_students;
+   open p_cursor for select s.student_id,
+                            s.first_name,
+                            s.last_name,
+                            e.completion_status,
+                            e.progress_percent
+                                         from students s
+                                         join enrollments e
+                                       on s.student_id = e.student_id
+                      where e.course_id = p_course_id
+                      order by s.student_id;
 end;
 /
 SHOW ERRORS;

@@ -176,3 +176,5 @@
 --            - 500,
 --            'CARD',
 --            'PAID' );
+
+-- drop table users cascade constraints;

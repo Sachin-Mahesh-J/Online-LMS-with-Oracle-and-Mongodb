@@ -79,6 +79,17 @@ export const getEnrollmentsByStudentId = async (req, res) => {
 
   try {
     const { studentId } = req.params;
+    const numericStudentId = Number(studentId);
+
+    if (
+      req.user?.role === "STUDENT" &&
+      Number(req.user.student_id) !== numericStudentId
+    ) {
+      return res.status(403).json({
+        message: "You can only view your own enrollments",
+      });
+    }
+
     connection = await getOracleConnection();
 
     const result = await connection.execute(
@@ -94,7 +105,7 @@ export const getEnrollmentsByStudentId = async (req, res) => {
       WHERE student_id = :studentId
       ORDER BY enrollment_date DESC, enrollment_id DESC
       `,
-      { studentId: Number(studentId) },
+      { studentId: numericStudentId },
       { outFormat: oracledb.OUT_FORMAT_OBJECT },
     );
 
@@ -151,6 +162,15 @@ export const createEnrollment = async (req, res) => {
 
   try {
     const { student_id, course_id } = req.body;
+
+    if (
+      req.user?.role === "STUDENT" &&
+      Number(req.user.student_id) !== Number(student_id)
+    ) {
+      return res.status(403).json({
+        message: "You can only create enrollments for yourself",
+      });
+    }
 
     if (!student_id || !course_id) {
       return res.status(400).json({

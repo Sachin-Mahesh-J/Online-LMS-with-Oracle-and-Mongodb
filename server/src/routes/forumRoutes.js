@@ -6,14 +6,19 @@ import {
   addReplyToPost,
   getRepliesByPost,
 } from "../controllers/forumController.js";
+import {
+  Auth,
+  requireStudent,
+  requireAnyUser,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", createForumPost);
-router.get("/", getAllForumPosts);
-router.get("/course/:courseId", getForumPostsByCourse);
+router.post("/", Auth, requireStudent, createForumPost);
+router.get("/", Auth, requireAnyUser, getAllForumPosts);
+router.get("/course/:courseId", Auth, requireAnyUser, getForumPostsByCourse);
 
-router.post("/:postId/replies", addReplyToPost);
-router.get("/:postId/replies", getRepliesByPost);
+router.post("/:postId/replies", Auth, requireStudent, addReplyToPost);
+router.get("/:postId/replies", Auth, requireAnyUser, getRepliesByPost);
 
 export default router;
