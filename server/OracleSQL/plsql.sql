@@ -77,7 +77,7 @@ create or replace procedure record_payment (
 ) as
    v_count number;
 begin
-    -- check enrollment exists
+   -- check enrollment exists
    select count(*)
      into v_count
      from enrollments
@@ -87,6 +87,20 @@ begin
       raise_application_error(
          -20004,
          'Enrollment does not exist.'
+      );
+   end if;
+
+   -- prevent new payments after a successful payment already exists
+   select count(*)
+     into v_count
+     from payments
+    where enrollment_id = p_enrollment_id
+      and payment_status = 'PAID';
+
+   if v_count > 0 then
+      raise_application_error(
+         -20008,
+         'A successful payment already exists for this enrollment.'
       );
    end if;
    insert into payments (
@@ -104,7 +118,7 @@ begin
    dbms_output.put_line('Payment recorded successfully.');
 end;
 /
-SHOW ERRORS;
+show errors;
 
 
 -- =========================================
