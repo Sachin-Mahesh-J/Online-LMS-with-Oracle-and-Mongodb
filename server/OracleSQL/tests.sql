@@ -177,4 +177,33 @@
 --            'CARD',
 --            'PAID' );
 
--- drop table users cascade constraints;
+-- select user_id,
+--        email,
+--        role,
+--        student_id,
+--        instructor_id,
+--        is_active
+--   from users
+--  order by user_id;
+
+-- select email,
+--        password_hash,
+--        length(password_hash) as hash_length
+-- from users
+-- where email = 'john.silva@student.demo';
+
+-- select constraint_name,
+--        table_name,
+--        constraint_type
+--   from user_constraints
+--  where constraint_name = 'SYS_C008255';
+
+-- select constraint_name,
+--        table_name,
+--        column_name,
+--        position
+--   from user_cons_columns
+--  where constraint_name = 'SYS_C008255'
+--  order by position;
+
+drop table users cascade constraints;

@@ -9,7 +9,6 @@ create or replace procedure enroll_student (
 ) as
    v_count number;
 begin
-    -- check student exists
    select count(*)
      into v_count
      from students
@@ -21,8 +20,6 @@ begin
          'Student does not exist.'
       );
    end if;
-
-    -- check course exists
    select count(*)
      into v_count
      from courses
@@ -34,8 +31,6 @@ begin
          'Course does not exist.'
       );
    end if;
-
-    -- check duplicate enrollment
    select count(*)
      into v_count
      from enrollments
@@ -60,10 +55,15 @@ begin
               'ENROLLED',
               0 );
 
-   dbms_output.put_line('Student enrolled successfully.');
+exception
+   when dup_val_on_index then
+      raise_application_error(
+         -20003,
+         'Student is already enrolled in this course.'
+      );
 end;
 /
-SHOW ERRORS;
+show errors;
 
 
 -- =========================================
